@@ -1,0 +1,1 @@
+{["rednet"]=true,["userAuth"]="125}_/%22222222222",["user"]="Carg",["version"]="v0.1",}
