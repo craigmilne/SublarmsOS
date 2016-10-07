@@ -1,3 +1,5 @@
+-- loads the config vars etc.
+
 local vars = {}
 local oldVars = {}
 

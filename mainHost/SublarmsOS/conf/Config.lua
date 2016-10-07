@@ -3,6 +3,7 @@
 conf_version = "v0.1"
 
 -- Network Servers --
+-- hard coded but would likely use a rednet broadcast to ask for ids to be sent on request in production
 conf_mainHost = 25
 conf_pingServer = 29
 conf_userServer = 43

@@ -1,3 +1,6 @@
+-- currently only the default snake game that comes with the mod.
+-- partially the inspiration for my Snake (in C)
+
 os.loadAPI("SublarmsOS/conf/Config")
 os.loadAPI(Config.rootDir().."/os/utils/ScreenUtils")
 

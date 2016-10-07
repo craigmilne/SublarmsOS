@@ -1,3 +1,4 @@
+-- Split function, fairly simple
 function split(s, regex)
   if regex == nil then
     regex = "%s"
@@ -10,14 +11,17 @@ function split(s, regex)
   return t
 end
 
+-- standard x `startsWith` y function
 function startsWith(x, y)
   return string.sub(x, 1, #y) == y
 end
 
+-- unused
 function convert( chars, dist, inv )
   return string.char( ( string.byte( chars ) - 32 + ( inv and -dist or dist ) ) % 95 + 32 )
 end
 
+-- unused here
 function encrypt(str,k)
   local inv = false
   local enc= ""
@@ -38,5 +42,3 @@ function encrypt(str,k)
   end
   return enc:gsub(":","cc")
 end
-
-a = "Hello"

@@ -1,3 +1,4 @@
+-- Split function, fairly simple
 function split(s, regex)
   if regex == nil then
     regex = "%s"
@@ -10,10 +11,13 @@ function split(s, regex)
   return t
 end
 
+-- not used here, but copied from a master TextUtils file
 function convert( chars, dist, inv )
   return string.char( ( string.byte( chars ) - 32 + ( inv and -dist or dist ) ) % 95 + 32 )
 end
 
+-- encrypts a users password, fairly weak cryptography but it's only a gameworld shared between 5 or 6 of us so security wasn't an issue,
+-- just avoided plaintext passwords
 function encrypt(str,k)
   local inv = false
   local enc= ""
@@ -34,5 +38,3 @@ function encrypt(str,k)
   end
   return enc:gsub(":","cc")
 end
-
-a = "Hello"

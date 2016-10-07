@@ -1,3 +1,5 @@
+-- ReadSent, a lot of reused code from 'Read'
+
 os.loadAPI("/SublarmsOS/conf/Config")
 os.loadAPI(Config.rootDir().."/utils/TextUtils")
 os.loadAPI(Config.rootDir().."/utils/FileHandler")
@@ -8,6 +10,7 @@ rtConf = FileHandler.readVariableFile(Config.runtimeFile())
 local id = ...
 local readError = false
 
+-- as this is a sent email we read from file
 emails = FileHandler.readVariableFile(Config.rootDir().."/os/email/sentmail/"..rtConf.user)
 email = {}
 for i=1,#emails do
@@ -27,9 +30,10 @@ isReply = true
 --header = {10,"Carg","Adroon","Do You Have A Geiger Counter?"}
 --body = "Hello Carg, \\n \\n I was wondering if you had a geiger counter. \\n You probably do. \\n \\n memes. \\n \\n more memes.  \\n \\n All the best, \\n Droon."
 
+-- main loop
 while true do
   
-  ScreenUtils.drawHF("Email >> Inbox >> View Message")
+  ScreenUtils.drawHF("Email >> Sent >> View Message")
   term.setCursorPos(1,4)
   term.write("  From    :                                          ")
   term.setCursorPos(1,5)
@@ -37,9 +41,9 @@ while true do
   term.setCursorPos(1,6)
   term.write("  Subject :                                          ")
   term.setCursorPos(13,4)
-  term.write(header[3])
-  term.setCursorPos(13,5)
   term.write(header[2])
+  term.setCursorPos(13,5)
+  term.write(header[3])
   term.setCursorPos(13,6)
   subj = header[4]
   if #subj > 38 then
@@ -56,6 +60,7 @@ while true do
     term.write("[  Close  ]")
   end
   
+  -- uses ~d# to signify new line. 
   rowWidth = 47
   rows = {}
   row = ""
@@ -76,6 +81,7 @@ while true do
   end 
   rows[#rows+1] = row 
   
+  -- deal with email overflow
   term.setCursorPos(3,16)
   calcScroll = #rows - 6
   if calcScroll < 1 then
@@ -88,6 +94,7 @@ while true do
     term.write(rows[j+offset])
   end
 
+  -- user input (reply > sent args, or close email)
   e,k = os.pullEvent("key")
   if k == 203 then
     isReply = true
@@ -103,7 +110,7 @@ while true do
     end
   elseif k == 28 then
     if isReply then
-      shell.run(Config.rootDir().."/os/email/new",header[3],"Re> "..header[4])
+      shell.run(Config.rootDir().."/os/email/New",header[3],"Re> "..header[4])
     else
       break
     end

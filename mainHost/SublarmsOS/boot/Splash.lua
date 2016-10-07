@@ -1,3 +1,5 @@
+-- Print the splash screen with version no.
+
 os.loadAPI("SublarmsOS/conf/Config")
 
 term.clear()

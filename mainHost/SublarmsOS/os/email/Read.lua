@@ -1,3 +1,5 @@
+-- Read
+
 os.loadAPI("/SublarmsOS/conf/Config")
 os.loadAPI(Config.rootDir().."/utils/TextUtils")
 os.loadAPI(Config.rootDir().."/utils/FileHandler")
@@ -8,6 +10,7 @@ rtConf = FileHandler.readVariableFile(Config.runtimeFile())
 local id = ...
 local readError = false
 
+-- fetch the email from the server
 rednet.send(Config.emailServer(),"FETCH:"..rtConf.user..":"..id)
 s,emailHead = rednet.receive(3)
 s,emailBody = rednet.receive(3)
@@ -15,6 +18,7 @@ s,emailBody = rednet.receive(3)
 header = {}
 body = ""
 
+-- if failed to receive
 if emailBody == nil or emailHead == nil then
   readError = true
 else
@@ -34,6 +38,7 @@ isReply = true
 --header = {10,"Carg","Adroon","Do You Have A Geiger Counter?"}
 --body = "Hello Carg, \\n \\n I was wondering if you had a geiger counter. \\n You probably do. \\n \\n memes. \\n \\n more memes.  \\n \\n All the best, \\n Droon."
 
+-- main loop
 while true do
   
   ScreenUtils.drawHF("Email >> Inbox >> View Message")
@@ -63,6 +68,7 @@ while true do
     term.write("[  Close  ]")
   end
   
+  -- split body, ~d# is new line.
   rowWidth = 47
   rows = {}
   row = ""
@@ -83,6 +89,7 @@ while true do
   end 
   rows[#rows+1] = row 
   
+  -- deal with overflow
   term.setCursorPos(3,16)
   calcScroll = #rows - 6
   if calcScroll < 1 then
@@ -95,6 +102,7 @@ while true do
     term.write(rows[j+offset])
   end
 
+  -- user input (can reply or close)
   e,k = os.pullEvent("key")
   if k == 203 then
     isReply = true
@@ -109,7 +117,7 @@ while true do
       offset = offset + 1
     end
   elseif k == 28 then
-    if isReply then
+    if isReply then    -- send args to New
       shell.run(Config.rootDir().."/os/email/new",header[3],"Re> "..header[4])
     else
       break

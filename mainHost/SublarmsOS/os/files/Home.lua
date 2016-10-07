@@ -1,8 +1,12 @@
+-- Files
+
 os.loadAPI("/SublarmsOS/conf/Config")
 os.loadAPI(Config.rootDir().."/os/utils/ScreenUtils")
 os.loadAPI(Config.rootDir().."/utils/TextUtils")
 
 dir = "/"
+-- prints the instuctions for the file system
+-- a bit awkward to use; should redo
 local function drawInfo()
   term.setCursorPos(30,4)
   term.write("+----------------+")
@@ -32,6 +36,7 @@ local function drawInfo()
   term.write("+----------------+")
 end
 
+-- clear only the file system part of the page
 function clearPage()
   for i=4,17 do
     term.setCursorPos(2,i)
@@ -39,6 +44,7 @@ function clearPage()
   end
 end
 
+-- get parent dir of this one
 local function parentDir(dir)  
   ds = TextUtils.split(dir, "/")
   parent = ""
@@ -51,6 +57,7 @@ local function parentDir(dir)
   return parent
 end
 
+-- the confirm box for if you wish to delete a file
 local function deleteFileBox(file)
   
   term.setCursorPos(10,5)  
@@ -103,11 +110,13 @@ local cpage = 1
 local page = 1
 breakoption = false
 
+-- main loop
 while true do
   
   if dir == "" then
     dir = "/"
   end
+  -- draw screen
   ScreenUtils.drawHF("Files >> "..dir)
   drawInfo()
 
@@ -134,12 +143,14 @@ while true do
       end
       row = 5
     end
+    -- do not allow access to /SublarmsOS as user does not need to read it
     if fs.isDir(dir.."/"..file) and (dir.."/"..file ~= "/SublarmsOS") then
       term.setCursorPos(2,row)
       files[row-3] = file
       if #file > 16 then
         file = string.sub(file,1,13).."..."
       end
+      -- symbol |/ for directory
       term.write("   : |/ - "..file)
       folders = folders + 1
       row = row + 1
@@ -165,6 +176,7 @@ while true do
       if #file > 16 then
         file = string.sub(file,1,13).."..."
       end
+      -- symbol [] for file
       term.write("   : [] - "..file)
       row = row + 1
     end

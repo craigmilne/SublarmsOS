@@ -7,6 +7,8 @@ os.loadAPI(Config.rootDir().."/utils/TextUtils")
 config = {}
 config = FileHandler.readVariableFile(Config.runtimeFile())
 
+-- read input of length len and replace the characters with fill
+-- eg. passwords fill can be '*'
 local function readLen(len, fill)
   local input = ""
   local x,y = term.getCursorPos()
@@ -39,7 +41,7 @@ local function readLen(len, fill)
   return input
 end
 
-
+-- if user not auth. and internet on then prompt login
 if config.userAuth == 0 and config.rednet then
   term.clear()
   term.setCursorPos(1,1)
@@ -59,26 +61,28 @@ if config.userAuth == 0 and config.rednet then
   end
   beGuest = true
   loginLoop = true
+  -- screen render loop
   while loginLoop do
     event, key = os.pullEvent("key")
-    if key == 208 then
+    if key == 208 then  -- down arrow
       beGuest = false
       term.setCursorPos(14,6)
       print("   CONTINUE AS GUEST   ")
       term.setCursorPos(14,9)
       print("[  LOGIN TO SUBLARMS  ]")
-    elseif key == 200 then
+    elseif key == 200 then  -- up arrow
       beGuest = true
       term.setCursorPos(14,6)
       print("[  CONTINUE AS GUEST  ]") 
       term.setCursorPos(14,9)
       print("   LOGIN TO SUBLARMS   ")
-    elseif key == 28 then
+    elseif key == 28 then -- enter
       loginLoop = false
     else
       -- Random key
     end
-  end  
+  end
+  -- if user wants to login  
   if not beGuest then
     newAcc = true
     term.setCursorPos(14,6)
@@ -86,7 +90,7 @@ if config.userAuth == 0 and config.rednet then
     term.setCursorPos(14,9)
     print("   I HAVE AN ACCOUNT   ")
     newAccLoop = true
-    while newAccLoop do
+    while newAccLoop do -- same loop to get user input with same key bindings
       event, key = os.pullEvent("key")
       if key == 208 then
         term.setCursorPos(14,6)
@@ -106,7 +110,7 @@ if config.userAuth == 0 and config.rednet then
         -- Random key
       end
     end
-    if newAcc then
+    if newAcc then  -- if the user wants to make a new account
      accountVerified = false
      term.setCursorPos(1,17)
      print("                                                 ")
@@ -125,11 +129,12 @@ if config.userAuth == 0 and config.rednet then
       term.setCursorPos(11,10)
       print("   YES                 NO   ")
       term.setCursorPos(24,5)
+      -- read username
       user = readLen(12)
       pass = ""
       pass2 = ""
       passMatch = false
-      repeat
+      repeat -- read passwords until both match, only verified client side
         term.setCursorPos(24,6)
         pass = readLen(12,"*")
         term.setCursorPos(24,7)
@@ -152,7 +157,7 @@ if config.userAuth == 0 and config.rednet then
       term.setCursorPos(1,17)
       print("        Press Enter to create your account       ") 
       rememberLoop = true
-      while rememberLoop do
+      while rememberLoop do -- user can choose to save password or require on boot
         event, key = os.pullEvent("key")
         if key == 205 then
           term.setCursorPos(11,10)
@@ -176,6 +181,7 @@ if config.userAuth == 0 and config.rednet then
       end
       term.setCursorPos(1,17)
       print("         Waiting for server response...          ")
+      -- send to server and wait for a response
       rednet.send(Config.userServer(), "CREATE:"..user..":"..pass..":"..remStr)
       s = 0
       msg = ""
@@ -183,6 +189,7 @@ if config.userAuth == 0 and config.rednet then
         s, msg = rednet.receive()
       end
       mParts = TextUtils.split(msg, ":")
+      -- user created, get auth code
       if mParts[1] == "PASS" then
         accountVerified = true
         config.user = user
@@ -193,6 +200,7 @@ if config.userAuth == 0 and config.rednet then
       end
      until accountVerified 
     else
+      -- user wants to login, prompt login
       term.setCursorPos(1,17)
       print("                                                 ")
       loggedIn = false
@@ -202,6 +210,7 @@ if config.userAuth == 0 and config.rednet then
         term.setCursorPos(11,6)
         print("[  Password:               ]")
         term.setCursorPos(7,9)
+        -- no password reset yet, just talk to me and we can sort something out
         print("     Forgot Password? Tell Carg   ")
         term.setCursorPos(24,5)
         user = readLen(12)
@@ -228,4 +237,5 @@ if config.userAuth == 0 and config.rednet then
     end
   end 
 end
+-- store the details the user is using, if guest then continue
 FileHandler.writeVariableFile(Config.runtimeFile(), config)

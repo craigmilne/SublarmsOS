@@ -1,3 +1,5 @@
+-- Sent
+
 os.loadAPI("/SublarmsOS/conf/Config")
 os.loadAPI(Config.rootDir().."/os/utils/ScreenUtils")
 os.loadAPI(Config.rootDir().."/utils/TextUtils")
@@ -14,19 +16,15 @@ emails = FileHandler.readVariableFile(Config.rootDir().."/os/email/sentmail/"..r
 local obj = 1
 local offset = 0
 
+-- mainloop
 while true do
 
-  ScreenUtils.drawHF("Email >> Inbox")
+  ScreenUtils.drawHF("Email >> Sent")
 
   term.setCursorPos(1,4)
-  term.write("     To             Subject                      ")
-  term.setCursorPos(1,6)
---  term.write(" [ ! Adroon         Hello, Carg                 ]")
-  term.setCursorPos(1,7)
---  term.write("   ! Adroon         Re: Navy Seal Copypasta      ")
-  term.setCursorPos(1,8)
---  term.write("     Martaloon      Fwd: Funny Memes             ")  
+  term.write("     To             Subject                      ") 
     
+  -- print based on email numbers
   if #emails == 0 then
     term.setCursorPos(1,8)
     term.write("                No Messages Found                ")
@@ -35,7 +33,7 @@ while true do
     term.write("                 An Error Occured                ")
   else
     baseRow = 5
-    for i=1,9 do
+    for i=1,9 do  -- print first 9 emails, rest won't fit on page
       if i + offset > #emails then
         break
       end
@@ -58,6 +56,7 @@ while true do
     end
   end
   
+  -- email selector
   if #emails > 0 then
     term.setCursorPos(2, 5 + obj)
     term.write("[")
@@ -65,6 +64,7 @@ while true do
     term.write("]")
   end
 
+  -- get user input
   e,k = os.pullEvent("key")
   if k == 208 then
     if obj == 9 then

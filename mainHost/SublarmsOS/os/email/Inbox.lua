@@ -1,3 +1,5 @@
+-- user inbox
+
 os.loadAPI("/SublarmsOS/conf/Config")
 os.loadAPI(Config.rootDir().."/os/utils/ScreenUtils")
 os.loadAPI(Config.rootDir().."/utils/TextUtils")
@@ -7,6 +9,7 @@ rtConf = FileHandler.readVariableFile(Config.runtimeFile())
 
 error = false
 
+-- get all the email headers from the server
 emailStrings = {}
 rednet.send(Config.emailServer(),"FETCHHEAD:"..rtConf.user)
 s,m = rednet.receive(3)
@@ -38,6 +41,7 @@ for i=1,#emailStrings do
   table.insert(emails,mail)
 end
 
+-- sort unread email to the top
 local unreademails = {}
 local reademails = {}
 for i=1,#emails do
@@ -54,6 +58,7 @@ end
 --uncomment this to sort by unread
 --emails = unreademails -- actually sorted by unread
 
+-- reverse emails
 local emaTemp = {}
 for i=#emails, 1, -1 do table.insert(emaTemp,emails[i]) end
 emails = emaTemp
@@ -64,19 +69,15 @@ emails = emaTemp
 local obj = 1
 local offset = 0
 
+-- main loop
 while true do
 
   ScreenUtils.drawHF("Email >> Inbox")
 
   term.setCursorPos(1,4)
-  term.write("     Sender         Subject                      ")
-  term.setCursorPos(1,6)
---  term.write(" [ ! Adroon         Hello, Carg                 ]")
-  term.setCursorPos(1,7)
---  term.write("   ! Adroon         Re: Navy Seal Copypasta      ")
-  term.setCursorPos(1,8)
---  term.write("     Martaloon      Fwd: Funny Memes             ")  
+  term.write("     Sender         Subject                      ") 
     
+  -- print inbox contents
   if #emails == 0 then
     term.setCursorPos(1,8)
     term.write("                No Messages Found                ")
@@ -105,12 +106,14 @@ while true do
       term.setCursorPos(21,baseRow + i)
       term.write(subj)
     end
+    -- deal with oveflow
     if offset + 9 < #emails then
       term.setCursorPos(1,baseRow+11)
       term.write("               Scroll down for more              ")
     end
   end
   
+  -- track selected email
   if #emails > 0 then
     term.setCursorPos(2, 5 + obj)
     term.write("[")
@@ -118,6 +121,7 @@ while true do
     term.write("]")
   end
 
+  -- handle input for whichever email user selects/if they exit
   e,k = os.pullEvent("key")
   if k == 208 then
     if obj == 9 then

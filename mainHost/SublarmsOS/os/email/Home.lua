@@ -1,3 +1,5 @@
+-- Home
+
 os.loadAPI("SublarmsOS/conf/Config")
 os.loadAPI(Config.rootDir().."/os/utils/ScreenUtils")
 os.loadAPI(Config.rootDir().."/utils/FileHandler")
@@ -7,6 +9,7 @@ local rtConf = FileHandler.readVariableFile(Config.runtimeFile())
 
 local options = 1
 
+-- get no. of unread emails
 local function getUnreadCount()
   rednet.send(Config.emailServer(),"COUNT:"..rtConf.user)
   s,m = rednet.receive(3)
@@ -22,6 +25,7 @@ end
 
 local unreadCount = getUnreadCount()
 
+-- main loop
 while true do
   ScreenUtils.drawHF("Home >> Email")
   ScreenUtils.drawHomeOptions(1,true)
@@ -40,6 +44,7 @@ while true do
   term.setCursorPos(35,(options*2)+2)
   term.write("]")
 
+  -- tracks the users option and enters each option
   e, k = os.pullEvent("key")
   if k == 208 then  
     if options == 4 then
@@ -55,13 +60,13 @@ while true do
     end
   elseif k == 28 then  
     if options == 1 then
-      shell.run(Config.rootDir().."/os/email/inbox")
+      shell.run(Config.rootDir().."/os/email/Inbox")
     elseif options == 2 then
-      shell.run(Config.rootDir().."/os/email/new")
+      shell.run(Config.rootDir().."/os/email/New")
     elseif options == 3 then
-      shell.run(Config.rootDir().."/os/email/sent")
-    elseif options == 4 then
-      shell.run(Config.rootDir().."/os/email/friends")
+      shell.run(Config.rootDir().."/os/email/Sent")
+    --elseif options == 4 then  -- unfinished
+    --  shell.run(Config.rootDir().."/os/email/Friends")
     end
     unreadCount = getUnreadCount()
   elseif k == 14 then

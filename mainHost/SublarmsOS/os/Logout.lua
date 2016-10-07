@@ -1,6 +1,9 @@
+-- Logs the user out or shuts PC down
+
 os.loadAPI("/SublarmsOS/conf/Config")
 os.loadAPI(Config.rootDir().."/os/utils/ScreenUtils")
 
+-- topoption = logout, else shut down
 topoption = true
 
 while true do
@@ -24,6 +27,7 @@ while true do
     term.write("]")
   end
 
+  -- process key input
   e, k = os.pullEvent("key")
   if k == 208 then
     topoption = false

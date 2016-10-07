@@ -1,3 +1,5 @@
+-- New
+
 os.loadAPI("/SublarmsOS/conf/Config")
 os.loadAPI(Config.rootDir().."/utils/TextUtils")
 os.loadAPI(Config.rootDir().."/utils/FileHandler")
@@ -5,8 +7,10 @@ os.loadAPI(Config.rootDir().."/os/utils/ScreenUtils")
 
 rtConf = FileHandler.readVariableFile(Config.runtimeFile())
 
+-- see if to, subj are passed as args
 local to, subj = ...
 
+-- main loop
 while true do
   
   ScreenUtils.drawHF("Email >> Write New")
@@ -16,6 +20,7 @@ while true do
   term.setCursorPos(1,5)
   term.write("  Subject : ")
 
+  -- get username
   if to == nil then
     term.setCursorPos(13,4)
     to = TextUtils.readLen(12)
@@ -24,6 +29,7 @@ while true do
     term.write(to)
   end
 
+  -- get subject
   if subj == nil then
     term.setCursorPos(13,5)
     subj = TextUtils.readLen(30)
@@ -31,16 +37,18 @@ while true do
     term.setCursorPos(13,5)
     term.write(subj)
   end 
-  
+
   term.setCursorPos(1,16)
   term.write("      Use R-Shift To Confirm Your Email Body     ")
 
+  -- get the email body
   term.setCursorPos(3,7)
   body = TextUtils.bodyText(47,8)
   
   term.setCursorPos(1,16)
   term.write("    Use Enter to Send or Backspace to Cancel.    ")
   e,k = os.pullEvent("key")
+  -- send users email to the server, header first then body
   if k == 14 then
     break
   elseif k == 28 then

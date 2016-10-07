@@ -1,3 +1,7 @@
+-- items
+
+-- unfinished, but will interact with Turtles to store a users items and allow them to send it to others
+
 os.loadAPI("SublarmsOS/conf/Config")
 os.loadAPI(Config.rootDir().."/os/utils/ScreenUtils")
 

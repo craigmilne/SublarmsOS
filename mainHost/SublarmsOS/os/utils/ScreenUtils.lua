@@ -1,8 +1,11 @@
+-- screen utils
+
 os.loadAPI("/SublarmsOS/conf/Config")
 os.loadAPI(Config.rootDir().."/utils/FileHandler")
 
 rtConf = FileHandler.readVariableFile(Config.runtimeFile())
 
+-- draw the interface header and footer with 'dir' as the current path
 function drawHF(dir)
   if dir == nil then
     dir = ""
@@ -31,6 +34,7 @@ function drawHF(dir)
   --term.write(idStr) disabled since new mail
 end
 
+-- draw the options as seen on the homepage
 function drawHomeOptions(option, submenu)
   if submenu == nil then
     submenu = false
