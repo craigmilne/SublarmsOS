@@ -1,5 +1,5 @@
 # SublarmsOS
-A user interface for the Tekkit version of ComputerCraft
+A user interface for the Tekkit version of ComputerCraft.
 
 ## What is ComputerCraft?
 ComputerCraft ([Link Here](http://www.computercraft.info/)) is a mod for Minecraft that adds computers and advanced logic to the game. The mod adds a terminal with access to a Lua API, disk drives, printers, and network capability.
